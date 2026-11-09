@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bolívar Eco-Calculator</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        eco: {
+                            50: '#f0fdf4',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-eco-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-eco-100 py-4 px-6 shadow-sm no-print">
+        <div class="max-w-4xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-eco-600 p-2 rounded-xl text-white">
+                    <i data-lucide="leaf" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-slate-900" data-i18n="appTitle">Bolívar Eco-Calculator</h1>
+                    <p class="text-xs text-slate-500">Colegio Bolívar • Comité Ambiental</p>
+                </div>
+            </div>
+
+            <!-- Language Selector -->
+            <div class="flex items-center space-x-2 bg-slate-100 p-1.5 rounded-xl border border-slate-200">
+                <i data-lucide="globe" class="w-4 h-4 text-slate-500"></i>
+                <select id="languageSelect" onchange="changeLanguage(this.value)" class="bg-transparent text-xs font-semibold text-slate-700 outline-none cursor-pointer">
+                    <option value="es">Español (ES)</option>
+                    <option value="en">English (EN)</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-4xl w-full mx-auto p-4 sm:p-6 lg:p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- Form Card -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between no-print">
+            <div>
+                <h2 class="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                    <i data-lucide="sliders" class="w-5 h-5 text-eco-600"></i>
+                    <span data-i18n="formTitle">Hábitos Semanales</span>
+                </h2>
+
+                <form id="ecoForm" class="space-y-4" onsubmit="event.preventDefault();">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1 flex items-center gap-1.5">
+                            <i data-lucide="bus" class="w-4 h-4 text-eco-600"></i>
+                            <span data-i18n="lblTransport">Transporte al Colegio</span>
+                        </label>
+                        <select id="transport" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-eco-600 outline-none text-sm">
+                            <option value="bus" data-i18n="optBus">Bus escolar / público</option>
+                            <option value="car" data-i18n="optCar">Carro privado</option>
+                            <option value="carpool" data-i18n="optCarpool">Carro compartido (Carpool)</option>
+                            <option value="bike_walk" data-i18n="optBike">Bicicleta / Caminando</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1 flex items-center gap-1.5">
+                            <i data-lucide="file-text" class="w-4 h-4 text-eco-600"></i>
+                            <span data-i18n="lblPaper">Hojas de Papel al día</span>
+                        </label>
+                        <input type="number" id="paper" min="0" value="0" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-eco-600 outline-none text-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1 flex items-center gap-1.5">
+                            <i data-lucide="recycle" class="w-4 h-4 text-eco-600"></i>
+                            <span data-i18n="lblRecycle">Hábitos de Reciclaje</span>
+                        </label>
+                        <select id="recycle" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-eco-600 outline-none text-sm">
+                            <option value="never" data-i18n="optNever">Nunca</option>
+                            <option value="sometimes" data-i18n="optSometimes">A veces</option>
+                            <option value="always" data-i18n="optAlways">Siempre</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+
+            <button type="button" onclick="calculateImpact()" class="mt-6 w-full bg-eco-600 hover:bg-eco-700 text-white font-semibold py-3 rounded-xl transition flex items-center justify-center gap-2 shadow-md shadow-eco-600/20">
+                <i data-lucide="calculator" class="w-4 h-4"></i>
+                <span data-i18n="btnCalculate">Calcular Impacto</span>
+            </button>
+        </section>
+
+        <!-- Results Card -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between print-card col-span-1 md:col-span-1">
+            <div>
+                <h2 class="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                    <i data-lucide="award" class="w-5 h-5 text-eco-600"></i>
+                    <span data-i18n="resultsTitle">Impacto Ambiental</span>
+                </h2>
+
+                <div class="space-y-4">
+                    <div class="bg-eco-50 p-4 rounded-xl border border-eco-100">
+                        <span class="text-xs text-slate-500 font-semibold uppercase" data-i18n="lblCO2">Huella de Carbono Estimada</span>
+                        <p class="text-3xl font-extrabold text-slate-900 mt-1"><span id="co2Result">0.00</span> <span class="text-base font-normal text-slate-500">kg CO2 / sem</span></p>
+                    </div>
+
+                    <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-100">
+                        <span class="text-xs text-slate-500 font-semibold uppercase" data-i18n="lblPoints">Eco-Points Obtenidos</span>
+                        <p class="text-3xl font-extrabold text-eco-700 mt-1"><span id="pointsResult">100</span> <span class="text-base font-normal text-slate-500">pts</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" onclick="window.print()" class="mt-6 w-full border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold py-3 rounded-xl transition flex items-center justify-center gap-2 no-print">
+                <i data-lucide="printer" class="w-4 h-4"></i>
+                <span data-i18n="btnPrint">Imprimir / Reporte PDF</span>
+            </button>
+        </section>
+
+    </main>
+
+    <!-- Script modularizado -->
+    <script src="actions.js"></script>
+</body>
+</html>
